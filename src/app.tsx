@@ -1,43 +1,64 @@
 import { FC } from "react";
-import { useDependency } from "./hooks";
-import { Keys } from './dependencies';
+import createDependencies from "./createDependencies.factory";
+import { 
+    ApiDependency, 
+    StorageDependency, 
+    UtilsDependency,
+} from "./dependencies";
+
+enum Keys {
+    STORAGE = 'store'
+}
+
+const useApiDependency = createDependencies({
+    api: {
+        instance: ApiDependency
+    }
+});
+
+const useStorageDependency = createDependencies({
+    [Keys.STORAGE]: {
+        instance: StorageDependency
+    }
+});
+
+const useUtilDependency = createDependencies({
+    utils: {
+        instance: UtilsDependency
+    }
+});
 
 const App: FC = () => {
-    const { Api, UtilsForWeb, store } = useDependency('Api', 'UtilsForWeb', Keys.Storage);
+    const { api } = useApiDependency(['api']);
+    const { store } = useStorageDependency([Keys.STORAGE]);
+    const { utils } = useUtilDependency(['utils']);
 
-    const result = Api.get();
-    const normalized = UtilsForWeb.normalize('   Normalization util in\n aciton     ');
+    const result = api.get();
+    const normalized = utils.normalize('   Normalization util in\n action     ');
     const saved = store.save('dependency', 'saveString');
 
     return (
         <div>
-            <span>
-                Api
-            </span>
+            <h3>Api</h3>
             <p>
                 {
                     JSON.stringify(result)
                 }
             </p>
             <hr />
-            <span>
-                UtilsForWeb
-            </span>
+            <h3>Utils</h3>
             <p>
                 {
                     normalized
                 }
             </p>
             <hr />
-            <span>
-                Storage
-            </span>
+            <h3>Storage</h3>
             <p>
                 {
                     saved
                 }
             </p>
-            <hr />
         </div>
     );
 };

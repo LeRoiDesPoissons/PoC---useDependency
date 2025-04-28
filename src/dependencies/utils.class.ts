@@ -1,4 +1,4 @@
-class UtilsDependency {
+export class UtilsDependency {
     normalize(input: string): string {
         return input
                 .trim()
@@ -6,5 +6,3 @@ class UtilsDependency {
                 .replace(/|n/, '');
     }
 }
-
-export const Utils =  new UtilsDependency();
